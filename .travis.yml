@@ -16,11 +16,12 @@ cache:
     - $HOME/.npm
 
 php:
+ - 7.1
  - 7.2
 
 env:
   global:
-    - MOODLE_BRANCH=MOODLE_36_STABLE
+    - MOODLE_BRANCH=MOODLE_35_STABLE
   matrix:
     - DB=mysqli
     - DB=pgsql
@@ -34,7 +35,7 @@ before_install:
   - export PATH="$(cd ci/bin; pwd):$(cd ci/vendor/bin; pwd):$PATH"
 
 install:
-  - moodle-plugin-ci add-plugin vfremaux/moodle-block_use_stats/tree/MOODLE_36_STABLE
+  - moodle-plugin-ci add-plugin vfremaux/moodle-block_use_stats/tree/MOODLE_35_STABLE
   - moodle-plugin-ci install
 
 script:
