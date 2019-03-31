@@ -1,0 +1,10 @@
+{
+  "name": "moodle-availability_sectiontime-form",
+  "builds": {
+    "moodle-availability_sectiontime-form": {
+      "jsfiles": [
+        "form.js"
+      ]
+    }
+  }
+}

@@ -1,0 +1,11 @@
+
+input[name="timespent"] {
+    margin: 0 20px;
+}
+
+.sectiontime-spent {
+    border: 2px solid #5bc0de;
+    padding: 2px 5px;
+    border-radius: 4px;
+    display: inline-block;
+}
