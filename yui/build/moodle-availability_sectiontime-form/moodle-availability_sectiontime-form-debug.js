@@ -107,4 +107,5 @@ M.availability_sectiontime.form.fillErrors = function(errors, node) {
     }
 };
 
+
 }, '@VERSION@', {"requires": ["base", "node", "event", "io", "moodle-core_availability-form"]});
