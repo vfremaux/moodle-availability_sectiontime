@@ -26,12 +26,18 @@ $string['privacy:metadata'] = "La condition de disponibilité par temps passé s
 
 $string['description'] = 'Empêche l\'accès avant q\'un certain temps soit passé dans une certaine section.';
 $string['pluginname'] = 'Restriction sur temps passé dans une certaine section';
-$string['full_sectiontime'] = 'Disponible lorsque le temps passé dans la section <strong>{$a->name}</strong> excède <strong>{$a->timespent}</strong>';
-$string['short_sectiontime'] = 'Disponible après <strong>{$a->timespent}</strong> passés dans la section <strong>{$a->name}</strong>';
+$string['full_sectiontime'] = 'Disponible lorsque le temps passé dans la section <strong>{$a->name}</strong> excède <strong>{$a->timespent}</strong>. Actuellement : {$a->current}';
+$string['short_sectiontime'] = 'Disponible après <strong>{$a->timespent}</strong> passés dans la section <strong>{$a->name}</strong>. Actuellement : {$a->current}';
 $string['title'] = 'Temps passé (section)';
 $string['insection'] = ' minutes passées dans la section ';
 $string['conditiontitle'] = 'Plus de ';
 $string['error_nulltimespent'] = 'Vous devez entrer un nombre';
 $string['error_nosection'] = 'Vous devez choisir une section de référence';
 $string['elapsedinsection'] = 'Temps passé dans cette section : {$a} ';
+
+$string['realsections'] = 'Temps effectif de section (sans correctifs de credits LTC) ';
+$string['adjustedsections'] = 'Temps ajusté de section (avec correctifs de credits LTC)';
+$string['configsectiondurationsource'] = 'Temps source des sections';
+$string['configsectiondurationsource_desc'] = 'Sélectionne le temps de référence pour les sections.';
+
 
