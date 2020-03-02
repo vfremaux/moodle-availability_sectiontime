@@ -9,3 +9,15 @@ input[name="timespent"] {
     border-radius: 4px;
     display: inline-block;
 }
+
+.sectiontime-uncomplete {
+    display: inline-block;
+    padding: 2px;
+    background-color: #ffaaaa;
+}
+
+.sectiontime-complete {
+    display: inline-block;
+    padding: 2px;
+    background-color: #66dd66;
+}
