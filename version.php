@@ -32,4 +32,4 @@ $plugin->maturity = MATURITY_RC;
 $plugin->dependencies = array('block_use_stats' => '2019290300');
 
 // Non moodle attribute.
-$plugin->codeincrement = '3.6.0000';
+$plugin->codeincrement = '3.6.0001';
