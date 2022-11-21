@@ -58,7 +58,7 @@ class frontend extends \core_availability\frontend {
 
         foreach ($sections as $sid => $s) {
             if (empty($name)) {
-                $sections[$sid] = 'Section '.$s->section;
+                $sections[$sid] = 'S'. $s->section.': '.format_string($s->name);
             }
         }
 

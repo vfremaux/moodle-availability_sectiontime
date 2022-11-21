@@ -25,11 +25,12 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->version = 2019290300;
-$plugin->requires = 2018042700;
+$plugin->requires = 2020060900;
 $plugin->component = 'availability_sectiontime';
-$plugin->release = '3.5.0 (Build 2019290300)';
-$plugin->maturity = MATURITY_RC;
+$plugin->release = '3.9.0 (Build 2019290300)';
+$plugin->maturity = MATURITY_STABLE;
+$plugin->supported = [39,311];
 $plugin->dependencies = array('block_use_stats' => '2019290300');
 
 // Non moodle attribute.
-$plugin->codeincrement = '3.5.0000';
+$plugin->codeincrement = '3.9.0002';

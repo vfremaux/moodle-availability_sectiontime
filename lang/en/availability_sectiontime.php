@@ -26,12 +26,17 @@ $string['privacy:metadata'] = "The Section Time Availability condition do not ma
 
 $string['description'] = 'Prevent access until a certain amount of time has been spent into a given section.';
 $string['pluginname'] = 'Restriction by timespent in a course section';
-$string['full_sectiontime'] = 'Available when time spent in section <strong>{$a->name}</strong> exceeds <strong>{$a->timespent}</strong>';
-$string['short_sectiontime'] = 'Available after <strong>{$a->timespent}</strong> spent in section <strong>{$a->name}</strong>';
+$string['full_sectiontime'] = 'Available when time spent in section <strong>{$a->name}</strong> exceeds <strong>{$a->timespent}</strong>. Actually: {$a->current}';
+$string['short_sectiontime'] = 'Available after <strong>{$a->timespent}</strong> spent in section <strong>{$a->name}</strong>. Actually: {$a->current}';
 $string['title'] = 'Time spent (section)';
 $string['insection'] = ' in section ';
 $string['conditiontitle'] = 'Over minutes spent ';
 $string['error_nulltimespent'] = 'You must enter a number';
 $string['error_nosection'] = 'You must choose a reference course section';
 $string['elapsedinsection'] = 'you have spent in this section: {$a} ';
+
+$string['realsections'] = 'Real section time (without LTC credit correction) ';
+$string['adjustedsections'] = 'Adjusted section time (including LTC credit correction)';
+$string['configsectiondurationsource'] = 'Section time source';
+$string['configsectiondurationsource_desc'] = 'Section time source data.';
 

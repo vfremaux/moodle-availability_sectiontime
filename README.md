@@ -1,2 +1,5 @@
-# moodle-availability_sectiontime
-An Avalability condition based on time spent in a course section (or page)
+
+3.6.0002
+##################
+
+Optimlizes duration calculation when called several times in a single page.
