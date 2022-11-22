@@ -25,11 +25,23 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->version = 2019290300;
+<<<<<<< HEAD
 $plugin->requires = 2019111200;
 $plugin->component = 'availability_sectiontime';
 $plugin->release = '3.8.0 (Build 2019290300)';
 $plugin->maturity = MATURITY_RC;
+=======
+$plugin->requires = 2022041200;
+$plugin->component = 'availability_sectiontime';
+$plugin->release = '4.0.0 (Build 2019290300)';
+$plugin->maturity = MATURITY_STABLE;
+>>>>>>> MOODLE_40_STABLE
 $plugin->dependencies = array('block_use_stats' => '2019290300');
+$plugin->supported = [40,40];
 
 // Non moodle attribute.
+<<<<<<< HEAD
 $plugin->codeincrement = '3.8.0001';
+=======
+$plugin->codeincrement = '4.0.0002';
+>>>>>>> MOODLE_40_STABLE

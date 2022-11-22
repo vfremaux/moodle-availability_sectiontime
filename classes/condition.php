@@ -210,6 +210,7 @@ class condition extends \core_availability\condition {
 
     public function check($section, $userid) {
         global $CFG, $DB;
+<<<<<<< HEAD
 
         $now = self::get_time();
 
@@ -231,4 +232,54 @@ class condition extends \core_availability\condition {
         }
     }
 
+=======
+        static $CACHE = []; // Request scope cache.
+        static $CACHECURRENT = []; // Request scope cache.
+
+        $config = get_config('availability_sectiontime');
+
+        $now = self::get_time();
+
+        $cachekey = $section->id.'_'.$userid;
+
+        if (!array_key_exists($cachekey, $CACHE)) {
+
+            $course = $DB->get_record('course', ['id' => $section->course]);
+            $logs = use_stats_extract_logs($course->startdate, $now, $userid, $course->id);
+            // Explicit transmission of course, as availability my be checked before require_login() sets course up.
+            $aggregate = use_stats_aggregate_logs($logs, $course->startdate, $now, '', false, $course);
+            // Timespent stored in minutes.
+
+            // Timespent stored in minutes.
+            if ($config->sectiondurationsource) {
+                $this->allow = $aggregate['section'][$section->id]->elapsed >= $this->timespent * 60;
+                $mins = floor((0 + @$aggregate['section'][$section->id]->elapsed) / 60);
+                $secs = (0 + @$aggregate['section'][$section->id]->elapsed) - 60 * $mins;
+    
+                if ($this->timespent * 60 > @$aggregate['section'][$section->id]->elapsed) {
+                    // mark with red/uncomplete.
+                    $this->current = '<span class="sectiontime-uncomplete">'.$mins.'m '.$secs.'s</span>';
+                } else {
+                    $this->current = '<span class="sectiontime-complete">'.$mins.'m '.$secs.'s</span>';
+                }
+            } else {
+                $this->allow = $aggregate['realsection'][$section->id]->elapsed >= $this->timespent * 60;
+                $mins = floor((0 + @$aggregate['realsection'][$section->id]->elapsed) / 60);
+                $secs = (0 + @$aggregate['realsection'][$section->id]->elapsed) - 60 * $mins;
+    
+                if ($this->timespent * 60 > @$aggregate['realsection'][$section->id]->elapsed) {
+                    // mark with red/uncomplete.
+                    $this->current = '<span class="sectiontime-uncomplete">'.$mins.'m '.$secs.'s</span>';
+                } else {
+                    $this->current = '<span class="sectiontime-complete">'.$mins.'m '.$secs.'s</span>';
+                }
+            }
+            $CACHE[$cachekey] = $this->allow;
+            $CACHECURRENT[$cachekey] = $this->current;
+        } else {
+            $this->allow = $CACHE[$cachekey];
+            $this->current = $CACHECURRENT[$cachekey];
+        }
+    }
+>>>>>>> MOODLE_40_STABLE
 }
