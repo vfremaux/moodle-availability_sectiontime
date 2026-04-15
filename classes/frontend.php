@@ -17,21 +17,22 @@
 /**
  * Front-end class.
  *
- * @package availability_sectiontime
- * @copyright 2016 valery fremaux (Valery Fremaux@gmail.com)
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     availability_sectiontime
+ * @author      Valery Fremaux (valery.fremaux@gmail.com)
+ * @copyright   2017 Valery Fremaux (activeprolearn.com)
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 namespace availability_sectiontime;
 
-defined('MOODLE_INTERNAL') || die();
+// phpcs:disable moodle.Commenting.ValidTags.Invalid
 
 /**
  * Front-end class.
  *
- * @package availability_sectiontime
- * @copyright 2019 MyLearningFactory
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     availability_sectiontime
+ * @author      Valery Fremaux (valery.fremaux@gmail.com)
+ * @copyright   2017 Valery Fremaux (activeprolearn.com)
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class frontend extends \core_availability\frontend {
     /**
@@ -47,22 +48,32 @@ class frontend extends \core_availability\frontend {
      */
     const DATE_SELECTOR_SUPPORTED = false;
 
+    /**
+     * Get strings for Javascript.
+     */
     protected function get_javascript_strings() {
-        return array('short_sectiontime', 'conditiontitle', 'insection');
+        return ['short_sectiontime', 'conditiontitle', 'insection'];
     }
 
-    protected function get_javascript_init_params($course, \cm_info $cm = null, \section_info $section = null) {
-        global $DB, $USER, $COURSE;
+    /**
+     * Something to initialize JS.
+     * @param object $course
+     * @param cm_info $cm course module
+     * @param section_info $section section
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    protected function get_javascript_init_params($course, ?\cm_info $cm = null, ?\section_info $section = null) {
+        global $DB, $COURSE;
 
-        $sections = $DB->get_records('course_sections', array('course' => $COURSE->id), 'section', 'id,section,name');
+        $sections = $DB->get_records('course_sections', ['course' => $COURSE->id], 'section', 'id,section,name');
 
         foreach ($sections as $sid => $s) {
-            if (empty($name)) {
+            if (empty($s->name)) {
                 $sections[$sid] = 'S'. $s->section.': '.format_string($s->name);
             }
         }
 
         $converted = self::convert_associative_array_for_js($sections, 'field', 'display');
-        return(array($converted));
+        return([$converted]);
     }
 }

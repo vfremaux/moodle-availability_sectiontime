@@ -17,20 +17,22 @@
 /**
  * Version info.
  *
- * @package availability_sectiontime
- * @copyright 2016 Valery Fremaux (valery.fremaux@gmail.com)
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     availability_sectiontime
+ * @author      Valery Fremaux (valery.fremaux@gmail.com)
+ * @copyright   2017 Valery Fremaux (activeprolearn.com)
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2025022100;
+$plugin->version = 2026041300;
 $plugin->requires = 2022041900;
 $plugin->component = 'availability_sectiontime';
-$plugin->release = '4.5.0 (Build 2025022100)';
+$plugin->release = '5.1.0 (Build 2026041300)';
 $plugin->maturity = MATURITY_STABLE;
-$plugin->dependencies = array('block_use_stats' => '2019290300');
-$plugin->supported = [401, 405];
+$plugin->dependencies = ['block_use_stats' => '2019290300'];
+$plugin->supported = [500, 503];
 
 // Non moodle attribute.
 $plugin->codeincrement = '4.5.0002';
+$plugin->privacy = 'public';

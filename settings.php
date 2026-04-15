@@ -27,8 +27,8 @@ defined('MOODLE_INTERNAL') || die();
 
 if ($ADMIN->fulltree) {
 
-    $options = array(0 => get_string('realsections', 'availability_sectiontime'),
-                     1 => get_string('adjustedsections', 'availability_sectiontime'));
+    $options = [0 => get_string('realsections', 'availability_sectiontime'),
+                     1 => get_string('adjustedsections', 'availability_sectiontime')];
 
     $key = 'availability_sectiontime/sectiondurationsource';
     $label = get_string('configsectiondurationsource', 'availability_sectiontime');
