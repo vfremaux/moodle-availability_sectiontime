@@ -18,11 +18,19 @@
  * Date condition.
  *
  * @package availability_sectiontime
- * @copyright 2016 Valery Fremaux (valery.fremaux@gmail.com)
+ * @author      Valery Fremaux (valery.fremaux@gmail.com)
+ * @copyright   2017 Valery Fremaux (activeprolearn.com)
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 namespace availability_sectiontime;
+
+// phpcs:disable moodle.Commenting.ValidTags.Invalid
+
+use coding_exception;
+use core_availability\condition as core_condition;
+use core_availability\info;
+use context_system;
+use context_course;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -32,17 +40,22 @@ require_once($CFG->dirroot.'/blocks/use_stats/locallib.php');
  * Week from course start condition.
  *
  * @package availability_coursetime
- * @copyright 2014 The Open University
+ * @author      Valery Fremaux (valery.fremaux@gmail.com)
+ * @copyright   2017 Valery Fremaux (activeprolearn.com)
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class condition extends \core_availability\condition {
+class condition extends core_condition {
 
-    /** @var int Time (Unix epoch seconds) for condition. */
+    /** @var int $sectionid */
     private $sectionid;
+
+    /** @var int $timespent (Unix epoch seconds) for condition. */
     private $timespent;
 
+    /** @var bool $allow */
     protected $allow;
 
+    /** @var int $current */
     protected $current;
 
     /**
@@ -57,44 +70,54 @@ class condition extends \core_availability\condition {
         if (isset($structure->s)) {
             $this->sectionid = $structure->s;
         } else {
-            throw new \coding_exception('Missing or invalid ->s for section condition');
+            throw new coding_exception('Missing or invalid ->s for section condition');
         }
 
         if (isset($structure->t)) {
             $this->timespent = $structure->t;
         } else {
-            throw new \coding_exception('Missing or invalid ->t for time condition');
+            throw new coding_exception('Missing or invalid ->t for time condition');
         }
 
         $this->current = '<span class="sectiontime-uncomplete">0m 0s</span>';
     }
 
+    /**
+     * Saves availability data.
+     */
     public function save() {
-        return (object)array('type' => 'sectiontime',
+        return (object)['type' => 'sectiontime',
                 's' => $this->sectionid,
-                't' => $this->timespent);
+                't' => $this->timespent];
     }
 
-    public function is_available($not, \core_availability\info $info, $grabthelot, $userid) {
+    /**
+     * Checks the target is available
+     * @param bool $not
+     * @param \core_availability\info $info
+     * @param bool $grabthelot
+     * @param int $userid
+     * @return boolean
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function is_available($not, info $info, $grabthelot, $userid) {
         global $DB;
 
-        $systemcontext = \context_system::instance();
+        $systemcontext = context_system::instance();
         if (has_capability('moodle/site:config', $systemcontext)) {
             return true;
         }
 
         // Check condition.
-        $now = self::get_time();
-
-        if (!$section = $DB->get_record('course_sections', array('id' => $this->sectionid))) {
+        if (!$section = $DB->get_record('course_sections', ['id' => $this->sectionid])) {
             return true;
         }
 
-        if (!$course = $DB->get_record('course', array('id' => $section->course))) {
+        if (!$DB->get_record('course', ['id' => $section->course])) {
             return true;
         }
 
-        $coursecontext = \context_course::instance($section->course);
+        $coursecontext = context_course::instance($section->course);
         if (has_capability('moodle/course:manageactivities', $coursecontext)) {
             // People who can edit course do not need playing condition.
             return true;
@@ -109,16 +132,23 @@ class condition extends \core_availability\condition {
         return $this->allow;
     }
 
+    /**
+     * Checks the target is globally available
+     * @param bool $not
+     * @return boolean
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function is_available_for_all($not = false) {
-        global $CFG, $USER, $DB;
+        global $USER, $DB;
 
         $config = get_config('availability_sectiontime');
 
         // Check condition.
         $now = self::get_time();
 
-        $section = $DB->get_record('course_sections', array('id' => $this->sectionid));
-        $course = $DB->get_record('course', array('id' => $section->course));
+        $section = $DB->get_record('course_sections', ['id' => $this->sectionid]);
+        $course = $DB->get_record('course', ['id' => $section->course]);
 
         $logs = use_stats_extract_logs($course->startdate, $now, $USER->id, $course->id);
         $aggregate = use_stats_aggregate_logs($logs, $course->startdate, $now);
@@ -137,12 +167,27 @@ class condition extends \core_availability\condition {
         return $allow;
     }
 
-    public function get_description($full, $not, \core_availability\info $info) {
+    /**
+     * Gets a condition description for printing
+     * @param bool $full
+     * @param bool $not
+     * @param info $info
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function get_description($full, $not, info $info) {
         return $this->get_either_description($not, false);
     }
 
+    /**
+     * Gets a condition description for printing
+     * @param bool $full
+     * @param bool $not
+     * @param info $info
+     * @return string
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function get_standalone_description(
-            $full, $not, \core_availability\info $info) {
+            $full, $not, info $info) {
         return $this->get_either_description($not, true);
     }
 
@@ -152,13 +197,14 @@ class condition extends \core_availability\condition {
      *
      * @param bool $not True if NOT is in force
      * @param bool $standalone True to use standalone lang strings
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     protected function get_either_description($not, $standalone) {
         global $DB;
 
         $satag = $standalone ? 'short_' : 'full_';
 
-        $section = $DB->get_record('course_sections', array('id' => $this->sectionid), 'id,name,section');
+        $section = $DB->get_record('course_sections', ['id' => $this->sectionid], 'id,name,section');
         if (empty($section->name)) {
             $section->name = 'Section '.$section->section;
         }
@@ -186,20 +232,35 @@ class condition extends \core_availability\condition {
         return time();
     }
 
+    /**
+     * Debug String.
+     * @return int
+     */
     protected function get_debug_string() {
         return $this->timespent.' in '.$this->sectionid;
     }
 
+    /**
+     * After restore function.
+     * @param int $restoreid
+     * @param int $courseid
+     * @param \base_logger $logger
+     * @param string $name
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function update_after_restore($restoreid, $sectionid, \base_logger $logger, $name) {
         return true;
     }
 
+    /**
+     * Is this availability condition used ?
+     */
     public static function use_sectiontime($courseid) {
         global $DB;
 
-        $sectionavailabilities = $DB->get_records('course_sections', ['course' => $courseid], 'id', 'id,availability');
-        if ($sectionavailabilities) {
-            foreach ($sectionavailabilities as $fa) {
+        $sectionavails = $DB->get_records('course_sections', ['course' => $courseid], 'id', 'id,availability');
+        if ($sectionavails) {
+            foreach ($sectionavails as $fa) {
                 if (preg_match('/\bsectiontime\b/', $fa->availability)) {
                     return true;
                 }
@@ -208,10 +269,16 @@ class condition extends \core_availability\condition {
         return false;
     }
 
+    /**
+     * Check the section time grabbing it in cache if present.
+     * @param object $section
+     * @param ibt $userid
+     */
     public function check($section, $userid) {
-        global $CFG, $DB;
-        static $CACHE = []; // Request scope cache.
-        static $CACHECURRENT = []; // Request scope cache.
+        global $DB;
+
+        static $cache = []; // Request scope cache.
+        static $cachecurrent = []; // Request scope cache.
 
         $config = get_config('availability_sectiontime');
 
@@ -219,7 +286,7 @@ class condition extends \core_availability\condition {
 
         $cachekey = $section->id.'_'.$userid;
 
-        if (!array_key_exists($cachekey, $CACHE)) {
+        if (!array_key_exists($cachekey, $cache)) {
 
             $course = $DB->get_record('course', ['id' => $section->course]);
             $logs = use_stats_extract_logs($course->startdate, $now, $userid, $course->id);
@@ -230,32 +297,32 @@ class condition extends \core_availability\condition {
             // Timespent stored in minutes.
             if ($config->sectiondurationsource) {
                 $this->allow = $aggregate['section'][$section->id]->elapsed >= $this->timespent * 60;
-                $mins = floor((0 + @$aggregate['section'][$section->id]->elapsed) / 60);
-                $secs = (0 + @$aggregate['section'][$section->id]->elapsed) - 60 * $mins;
-    
-                if ($this->timespent * 60 > @$aggregate['section'][$section->id]->elapsed) {
-                    // mark with red/uncomplete.
+                $mins = floor(($aggregate['section'][$section->id]->elapsed ?? 0) / 60);
+                $secs = ($aggregate['section'][$section->id]->elapsed ?? 0) - 60 * $mins;
+
+                if ($this->timespent * 60 > ($aggregate['section'][$section->id]->elapsed ?? 0)) {
+                    // Mark with red/uncomplete.
                     $this->current = '<span class="sectiontime-uncomplete">'.$mins.'m '.$secs.'s</span>';
                 } else {
                     $this->current = '<span class="sectiontime-complete">'.$mins.'m '.$secs.'s</span>';
                 }
             } else {
-                $this->allow = $aggregate['realsection'][$section->id]->elapsed >= $this->timespent * 60;
-                $mins = floor((0 + @$aggregate['realsection'][$section->id]->elapsed) / 60);
-                $secs = (0 + @$aggregate['realsection'][$section->id]->elapsed) - 60 * $mins;
-    
-                if ($this->timespent * 60 > @$aggregate['realsection'][$section->id]->elapsed) {
-                    // mark with red/uncomplete.
+                $this->allow = ($aggregate['realsection'][$section->id]->elapsed ?? 0) >= $this->timespent * 60;
+                $mins = floor(($aggregate['realsection'][$section->id]->elapsed ?? 0) / 60);
+                $secs = ($aggregate['realsection'][$section->id]->elapsed ?? 0) - 60 * $mins;
+
+                if ($this->timespent * 60 > ($aggregate['realsection'][$section->id]->elapsed ?? 0)) {
+                    // Mark with red/uncomplete.
                     $this->current = '<span class="sectiontime-uncomplete">'.$mins.'m '.$secs.'s</span>';
                 } else {
                     $this->current = '<span class="sectiontime-complete">'.$mins.'m '.$secs.'s</span>';
                 }
             }
-            $CACHE[$cachekey] = $this->allow;
-            $CACHECURRENT[$cachekey] = $this->current;
+            $cache[$cachekey] = $this->allow;
+            $cachecurrent[$cachekey] = $this->current;
         } else {
-            $this->allow = $CACHE[$cachekey];
-            $this->current = $CACHECURRENT[$cachekey];
+            $this->allow = $cache[$cachekey];
+            $this->current = $cachecurrent[$cachekey];
         }
     }
 }
