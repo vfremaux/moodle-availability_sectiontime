@@ -34,5 +34,5 @@ $plugin->dependencies = ['block_use_stats' => '2019290300'];
 $plugin->supported = [500, 503];
 
 // Non moodle attribute.
-$plugin->codeincrement = '4.5.0002';
+$plugin->codeincrement = '5.1.0002';
 $plugin->privacy = 'public';
